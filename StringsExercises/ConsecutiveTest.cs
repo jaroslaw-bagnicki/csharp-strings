@@ -1,22 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq.Extensions;
 
 namespace StringsExercises
 {
     public class ConsecutiveTest
     {
+        private static readonly Dictionary<int, string> directionDict = new Dictionary<int, string>()
+        {
+            { 1, "ascending" },
+            { -1, "descending" },
+        };
+
         public static void Run()
         {
             List<int> numbers = GetNumbers();
-            Console.WriteLine("Numbers.Count: " + numbers.Count);
+            Console.WriteLine($"You enter sequence of {numbers.Count} numbers.");
+            Console.WriteLine("----");
 
-            var isConsecutive = CheckConsecutive(numbers);
+            bool isConsecutive;
+
+            int firstCompare = numbers[1] - numbers[0];
+
+            switch (firstCompare)
+            {
+                case 1:
+                case -1:
+                    isConsecutive = CheckConsecutive(numbers.Skip(1), firstCompare);
+                    break;
+                default:
+                    isConsecutive = false;
+                    break;
+            }
+
+            Console.WriteLine($"Sequence { (isConsecutive ? "is " + directionDict[firstCompare] : "isn't consecutive") }.");
+            //Console.ReadKey();
         }
 
-        private static bool CheckConsecutive(List<int> numbers)
+        private static bool CheckConsecutive(IEnumerable<int> numbers, int direction)
         {
-            return !numbers.Where((t, i) => numbers[i + 1] - t != 1).Any();
+            return numbers
+                        .Pairwise((a, b) => b - a)
+                        //.ForEach(a => Console.WriteLine(a))
+                        .All(a => a == direction);
         }
 
         private static List<int> GetNumbers()
@@ -49,6 +76,8 @@ namespace StringsExercises
 
                 return numbers;
             }
+
         }
+
     }
 }
