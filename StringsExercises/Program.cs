@@ -7,7 +7,8 @@ namespace StringsExercises
         static void Main(string[] args)
         {
             //ConsecutiveTest.Run();
-            Duplicates.Run();
+            //Duplicates.Run();
+            TimeParsing.Run();
         }
     }
 }
