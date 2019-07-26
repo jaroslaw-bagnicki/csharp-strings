@@ -24,6 +24,7 @@ namespace StringsExercises
 
             bool isConsecutive = Math.Abs(direct) == 1 && numbers
                          .Skip(1)
+                         .Pipe(t => Console.WriteLine("Pipe1: " + t))
                          .Lag(1, (curr, prev) => (curr, prev, direct))
                          .Skip(1)
                          .All(a => a.curr - a.prev == a.direct);
@@ -41,21 +42,20 @@ namespace StringsExercises
             //}
 
             Console.WriteLine($"Sequence { (isConsecutive ? "is " + directionDict[direct] : "isn't consecutive") }.");
-            //Console.ReadKey();
         }
 
-        private static bool CheckConsecutive(IEnumerable<int> numbers, int direction)
+        private static bool CheckConsecutive(List<int> numbers, int direction)
         {
+            int direct = numbers[1] - numbers[0];
 
-            //var tuple = ("one", "two");
-            return numbers
-                        .Pipe(a => Console.WriteLine("Pipe1: " + a))
-                        //.Pairwise((a, b) => b - a)
-                        .Lag(1, (curr, prev) => (curr, prev))
-                        .Skip(1)
-                        .Pipe(a => Console.WriteLine("Pipe2: " + a))
-                        //.Select(a => 1)
-                        .All(a => a.curr - a.prev == direction);
+            return Math.Abs(direct) == 1 && numbers
+                       .Pipe(a => Console.WriteLine("Pipe1: " + a))
+                       //.Pairwise((curr, prev) => curr - prev)
+                       .Lag(1, (curr, prev) => (curr, prev))
+                       .Skip(1)
+                       .Pipe(t => Console.WriteLine("Pipe2: " + t))
+                       //.Select(a => 1)
+                       .All(t => t.curr - t.prev == direction);
         }
 
         private static List<int> GetNumbers()
