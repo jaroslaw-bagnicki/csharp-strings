@@ -8,7 +8,8 @@ namespace StringsExercises
         {
             //ConsecutiveTest.Run();
             //Duplicates.Run();
-            TimeParsing.Run();
+            //TimeParsing.Run();
+            PascalConventionTransformer.Run();
         }
     }
 }
