@@ -19,31 +19,43 @@ namespace StringsExercises
             Console.WriteLine($"You enter sequence of {numbers.Count} numbers.");
             Console.WriteLine("----");
 
-            bool isConsecutive;
 
-            int firstCompare = numbers[1] - numbers[0];
+            int direct = numbers[1] - numbers[0];
 
-            switch (firstCompare)
-            {
-                case 1:
-                case -1:
-                    isConsecutive = CheckConsecutive(numbers.Skip(1), firstCompare);
-                    break;
-                default:
-                    isConsecutive = false;
-                    break;
-            }
+            bool isConsecutive = Math.Abs(direct) == 1 && numbers
+                         .Skip(1)
+                         .Lag(1, (curr, prev) => (curr, prev, direct))
+                         .Skip(1)
+                         .All(a => a.curr - a.prev == a.direct);
 
-            Console.WriteLine($"Sequence { (isConsecutive ? "is " + directionDict[firstCompare] : "isn't consecutive") }.");
+
+            //switch (direct)
+            //{
+            //    case 1:
+            //    case -1:
+            //        isConsecutive = CheckConsecutive(numbers.Skip(1), direct);
+            //        break;
+            //    default:
+            //        isConsecutive = false;
+            //        break;
+            //}
+
+            Console.WriteLine($"Sequence { (isConsecutive ? "is " + directionDict[direct] : "isn't consecutive") }.");
             //Console.ReadKey();
         }
 
         private static bool CheckConsecutive(IEnumerable<int> numbers, int direction)
         {
+
+            //var tuple = ("one", "two");
             return numbers
-                        .Pairwise((a, b) => b - a)
-                        //.ForEach(a => Console.WriteLine(a))
-                        .All(a => a == direction);
+                        .Pipe(a => Console.WriteLine("Pipe1: " + a))
+                        //.Pairwise((a, b) => b - a)
+                        .Lag(1, (curr, prev) => (curr, prev))
+                        .Skip(1)
+                        .Pipe(a => Console.WriteLine("Pipe2: " + a))
+                        //.Select(a => 1)
+                        .All(a => a.curr - a.prev == direction);
         }
 
         private static List<int> GetNumbers()
